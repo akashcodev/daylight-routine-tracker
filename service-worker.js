@@ -11,6 +11,8 @@ const ASSETS_TO_CACHE = [
   './swimming.html',
   './focus.html',
   './insights.html',
+  './theme-toggle.js,
+  './ daily.css,
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
