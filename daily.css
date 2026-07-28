@@ -97,3 +97,93 @@ dialog::backdrop { background: rgba(20, 42, 34, .36); backdrop-filter: blur(3px)
 @media (max-width: 760px) { .site-nav { display: none; }.explore-grid { grid-template-columns: repeat(2, 1fr); }.explore-card { min-height: 160px; } }
 @media (max-width: 620px) { .app-shell { padding: 0 20px 42px; }.topbar { height: 68px; }.hero { padding: 38px 0; }.overview { align-items: flex-start; flex-direction: column; gap: 21px; padding: 20px 0; }.progress-block { width: 100%; }.utility-grid { grid-template-columns: 1fr; padding-top: 20px; }.routine-section { padding-top: 38px; }.routine-item { grid-template-columns: 43px minmax(0, 1fr) 38px; padding: 13px; row-gap: 4px; }.time-control { grid-column: 2; grid-row: 2; margin-top: 0; font-size: 13px; }.item-actions { grid-column: 2; grid-row: 3; }.check-button { grid-column: 3; grid-row: 1 / span 3; }.delete-button { grid-column: 3; }.activity-name { font-size: 15px; }.routine-item { min-height: 112px; } }
 @media (max-width: 360px) { .app-shell { padding-inline: 14px; } h1 { font-size: 38px; } .hero-copy { font-size: 15px; } }
+/* ============================
+   Dark mode
+   Toggled by adding data-theme="dark" to <html> (see theme-toggle.js)
+   ============================ */
+ 
+body, .next-card, .week-card, .routine-item, .explore-card, .dialog-card,
+.alarm-card, .insight-card, .add-activity, .avatar, .week-day i {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+ 
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #edf3ee;
+  --muted: #93a79d;
+  --line: #2b3a33;
+  --surface: #1c2822;
+  --canvas: #10160f;
+  --sage: #1f342b;
+  --green: #3ecb9f;
+  --green-strong: #1f8a6c;
+  --shadow: 0 16px 38px rgba(0, 0, 0, .45);
+}
+ 
+[data-theme="dark"] .avatar { background: var(--sage); }
+[data-theme="dark"] .next-card { background: var(--sage); }
+[data-theme="dark"] .card-heading { color: var(--muted); }
+[data-theme="dark"] .card-heading strong { color: var(--ink); }
+[data-theme="dark"] .next-card > strong { color: var(--green); }
+[data-theme="dark"] .next-card p, [data-theme="dark"] .week-card p { color: var(--muted); }
+[data-theme="dark"] .week-day { color: var(--muted); }
+[data-theme="dark"] .week-day i { background: var(--line); }
+[data-theme="dark"] .week-day.done i { background: var(--sage); color: var(--green); }
+[data-theme="dark"] .text-button { color: var(--green); }
+[data-theme="dark"] .progress-track { background: var(--line); }
+[data-theme="dark"] .routine-item:hover { border-color: var(--line); }
+[data-theme="dark"] .routine-item.skipped { background: var(--canvas); }
+ 
+[data-theme="dark"] .sun .activity-icon { background: #4a3a12; color: #f2bd57; }
+[data-theme="dark"] .sky .activity-icon { background: #163238; color: #74cee2; }
+[data-theme="dark"] .rose .activity-icon { background: #402024; color: #e6a1a4; }
+[data-theme="dark"] .violet .activity-icon { background: #2c2440; color: #bcaae6; }
+ 
+[data-theme="dark"] .alarm-toggle, [data-theme="dark"] .skip-button { color: var(--muted); }
+[data-theme="dark"] .alarm-toggle.on { color: var(--green); background: var(--sage); }
+[data-theme="dark"] .skip-button.active { color: #e3ac63; background: #3a2c14; }
+[data-theme="dark"] .alarm-toggle:hover, [data-theme="dark"] .skip-button:hover { background: var(--line); color: var(--green); }
+ 
+[data-theme="dark"] .check-button { border-color: var(--line); background: var(--surface); }
+[data-theme="dark"] .complete .check-button { background: var(--green-strong); border-color: var(--green-strong); }
+[data-theme="dark"] .delete-button { color: var(--muted); }
+ 
+[data-theme="dark"] .insight-card { color: var(--muted); }
+[data-theme="dark"] .insight-card strong { color: var(--green); }
+ 
+[data-theme="dark"] dialog::backdrop { background: rgba(0, 0, 0, .6); }
+[data-theme="dark"] .dialog-card, [data-theme="dark"] .alarm-card { background: var(--surface); }
+[data-theme="dark"] .close-button { color: var(--muted); }
+[data-theme="dark"] .dialog-card label:not(.color-label) { color: var(--muted); }
+[data-theme="dark"] .dialog-card input:not([type="radio"]) {
+  background: var(--canvas);
+  border-color: var(--line);
+  color: var(--ink);
+  outline-color: var(--green);
+}
+[data-theme="dark"] .color-label { color: var(--muted); }
+[data-theme="dark"] .color-options input:checked { outline-color: var(--ink); }
+ 
+[data-theme="dark"] .save-button { background: var(--green-strong); }
+[data-theme="dark"] .save-button:hover { background: #176e56; }
+[data-theme="dark"] .snooze-button { border-color: var(--line); background: var(--surface); color: var(--ink); }
+ 
+[data-theme="dark"] .explore-card { color: var(--ink); }
+[data-theme="dark"] .gym-card { background: #1c2f27; }
+[data-theme="dark"] .gym-card::after { background: #3f6b57; }
+[data-theme="dark"] .swim-card { background: #16292c; }
+[data-theme="dark"] .swim-card::after { background: #2f6672; }
+[data-theme="dark"] .focus-card { background: #241f34; }
+[data-theme="dark"] .focus-card::after { background: #5c4f86; }
+[data-theme="dark"] .insight-card-link { background: #3a2f14; }
+[data-theme="dark"] .insight-card-link::after { background: #a67f2e; }
+[data-theme="dark"] .explore-orb { background: rgba(255, 255, 255, .14); }
+[data-theme="dark"] .explore-kicker, [data-theme="dark"] .explore-card em { color: var(--muted); }
+ 
+[data-theme="dark"] .add-activity { border-color: var(--line); color: var(--green); }
+ 
+/* Theme toggle button icon swap */
+#themeToggle { transform: none; }
+#themeToggle::before { content: "\263E"; }
+[data-theme="dark"] #themeToggle::before { content: "\2600"; }
+ 
