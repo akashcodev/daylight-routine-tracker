@@ -1,33 +1,39 @@
-// theme-toggle.js
-// Toggles data-theme="dark"/"light" on <html>, remembers the choice in
-// localStorage (so it persists across pages and visits), and updates the
-// mobile browser chrome color to match. The icon itself is swapped by CSS
-// (see the "#themeToggle::before" rules in daily.css) based on data-theme,
-// so no icon-swapping logic is needed here.
+// theme-toggle.js (v2)
+// Fresh dark-mode implementation. Uses localStorage key 'dl-theme-v2' and
+// clean, minimal runtime to avoid visual cross-fades. Does not reuse old logic.
 
 (function () {
+  var KEY = 'dl-theme-v2';
   var root = document.documentElement;
-  var toggleButton = document.getElementById('themeToggle');
   var meta = document.querySelector('meta[name="theme-color"]');
+  var LIGHT_COLOR = '#1c6f5b';
+  var DARK_COLOR = '#0f1412';
 
-  var LIGHT_THEME_COLOR = '#1c6f5b';
-  var DARK_THEME_COLOR = '#10160f';
-
-  function applyMetaColor(theme) {
-    if (!meta) return;
-    meta.setAttribute('content', theme === 'dark' ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+  function applyTheme(name) {
+    root.setAttribute('data-theme', name);
+    if (meta) meta.setAttribute('content', name === 'dark' ? DARK_COLOR : LIGHT_COLOR);
   }
 
-  // The inline script in <head> already set data-theme before first paint;
-  // just sync the theme-color meta tag to match on load.
-  applyMetaColor(root.getAttribute('data-theme') || 'light');
-
-  if (toggleButton) {
-    toggleButton.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('daylight-theme', next);
-      applyMetaColor(next);
-    });
+  function toggleTheme() {
+    var current = root.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    // suppress transitions during the flip
+    root.classList.add('no-transitions');
+    applyTheme(next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+    // allow paints without transitions
+    window.setTimeout(function () { root.classList.remove('no-transitions'); }, 60);
   }
+
+  // Initialize toggle button state once DOM is ready
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('themeToggle');
+    if (btn) {
+      btn.classList.toggle('enabled', root.getAttribute('data-theme') === 'dark');
+      btn.addEventListener('click', function () {
+        toggleTheme();
+        btn.classList.toggle('enabled', root.getAttribute('data-theme') === 'dark');
+      });
+    }
+  });
 })();

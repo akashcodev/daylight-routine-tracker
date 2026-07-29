@@ -1,5 +1,28 @@
 :root { --ink:#14332a; --muted:#70857c; --line:rgba(33,79,62,.12); --paper:#f5f8f5; --white:#fff; --green:#16735d; --mint:#dff0e8; --blue:#dff0f2; --purple:#eee9f7; --gold:#fff0d3; --radius:22px; }
-* { box-sizing:border-box; } body { margin:0; color:var(--ink); background:var(--paper); font-family:"DM Sans",sans-serif; } body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(circle at 90% 0%,rgba(185,226,209,.52),transparent 23%),radial-gradient(circle at 0% 40%,rgba(224,231,249,.43),transparent 20%); } button,input,select { font:inherit; } button { cursor:pointer; } .experience-shell { max-width:1190px; margin:0 auto; padding:0 42px 70px; position:relative; }
+* { box-sizing:border-box; }
+/* Utility class used to temporarily disable transitions/animations during theme switch */
+.no-transitions * { transition: none !important; animation: none !important; }
+body { margin:0; color:var(--ink); background:var(--paper); font-family:"DM Sans",sans-serif; } body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(circle at 90% 0%,rgba(185,226,209,.52),transparent 23%),radial-gradient(circle at 0% 40%,rgba(224,231,249,.43),transparent 20%); } button,input,select { font:inherit; } button { cursor:pointer; } .experience-shell { max-width:1190px; margin:0 auto; padding:0 42px 70px; position:relative; }
+
+/* Glassmorphism tokens and utilities */
+:root {
+  --glass-bg: rgba(255,255,255,0.58);
+  --glass-border: rgba(255,255,255,0.36);
+  --glass-blur: 8px;
+}
+/* Apply subtle glass effect to cards and surfaces */
+.card, .hero-stat, .week-panel, .workout-panel, .workout-log, .card, .toast {
+  background: linear-gradient(180deg, rgba(255,255,255,0.66), rgba(255,255,255,0.5));
+  border: 1px solid rgba(255,255,255,0.28);
+  backdrop-filter: blur(var(--glass-blur));
+}
+/* Dark-mode glass adjustments */
+html[data-theme="dark"] .card, html[data-theme="dark"] .hero-stat, html[data-theme="dark"] .week-panel, html[data-theme="dark"] .workout-panel {
+  background: linear-gradient(180deg, rgba(18,24,22,0.64), rgba(14,18,16,0.5));
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+
 .experience-header { height:88px; display:flex; align-items:center; gap:36px; border-bottom:1px solid var(--line); }.experience-brand { display:flex; align-items:center; gap:8px; color:var(--ink); font:700 25px Fraunces,serif; text-decoration:none; letter-spacing:-.8px; }.experience-brand span { color:#d8951f; font:30px Arial; }.experience-nav { display:flex; gap:24px; margin-left:auto; }.experience-nav a { color:#6c8279; text-decoration:none; font-size:13px; font-weight:700; }.experience-nav a:hover,.experience-nav a.active { color:var(--green); }.live-pill { border:0; background:#e1f0e7; color:#27735f; font-weight:700; font-size:11px; border-radius:20px; padding:9px 12px; }
 .page-hero { padding:55px 0 34px; display:flex; align-items:end; justify-content:space-between; gap:25px; }.eyebrow { color:#628078; margin:0 0 11px; font-weight:700; font-size:11px; letter-spacing:1.5px; }.page-hero h1 { margin:0; font:600 clamp(42px,5vw,64px)/.98 Fraunces,serif; letter-spacing:-2px; }.page-hero h1 em { color:var(--green); }.hero-copy { max-width:315px; color:var(--muted); line-height:1.6; font-size:14px; margin:0 0 4px; }.card { border:1px solid rgba(36,83,65,.09); border-radius:var(--radius); background:rgba(255,255,255,.78); box-shadow:0 14px 35px rgba(36,75,58,.045); }.panel-label { color:#648077; font-size:10px; letter-spacing:1.4px; font-weight:700; }.section-title { margin:0; font:600 28px Fraunces,serif; letter-spacing:-1px; }.small-copy { color:var(--muted); font-size:13px; line-height:1.5; }
 .hero-stat { min-width:200px; padding:18px 21px; background:#173b30; color:#f8fbf9; }.hero-stat span { display:block; color:#a8c6b8; font-size:10px; font-weight:700; letter-spacing:1.2px; }.hero-stat strong { display:block; margin:8px 0 3px; font:600 31px Fraunces,serif; }.hero-stat em { color:#bee4d2; font-size:11px; font-style:normal; }.action-button { border:0; color:#fff; background:var(--green); padding:12px 16px; border-radius:10px; font-weight:700; font-size:13px; }.action-button:hover { background:#115b4a; }.ghost-button { border:1px solid #cfddd4; color:#476b5c; background:#fff; padding:11px 14px; border-radius:10px; font-weight:700; font-size:13px; }
@@ -9,4 +32,101 @@
 /* Focus */ .focus-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:17px; }.timer-panel { padding:31px; text-align:center; background:linear-gradient(145deg,#eee9f7,#f9f7fc); }.timer-panel .panel-label { color:#786c99; }.timer-circle { width:235px; height:235px; border-radius:50%; display:grid; place-items:center; margin:19px auto; background:conic-gradient(#7562aa 0 0%,rgba(117,98,170,.13) 0); transition:background .4s; }.timer-inner { width:207px; height:207px; display:grid; place-items:center; align-content:center; border-radius:50%; background:#fbfaff; box-shadow:inset 0 0 0 1px rgba(105,87,152,.1); }.timer-inner strong { font:600 53px Fraunces,serif; letter-spacing:-2px; }.timer-inner span { margin-top:5px; color:#7d719d; font-size:11px; font-weight:700; }.timer-actions { display:flex; justify-content:center; gap:9px; }.focus-plan { padding:24px; }.goal-list { display:grid; gap:10px; margin-top:17px; }.goal { display:flex; align-items:center; gap:10px; border-radius:12px; padding:11px; background:#f8f7fb; }.goal button { width:25px; height:25px; border:1px solid #cfc7e1; border-radius:50%; background:#fff; color:#fff; }.goal.done button { background:#7764aa; border-color:#7764aa; }.goal.done span { text-decoration:line-through; color:#869083; }.goal span { flex:1; font-weight:700; font-size:13px; }.goal small { color:#7b708f; font-size:11px; }.focus-summary { margin-top:17px; padding:23px; background:#fff0d5; }.focus-summary h2 { margin:8px 0 3px; font:600 31px Fraunces,serif; }.focus-summary p { margin:0; }
 /* Insights */ .insight-hero { padding:27px; background:linear-gradient(105deg,#193d32,#2d765f); color:#fff; overflow:hidden; position:relative; }.insight-hero::after { content:'✦'; position:absolute; right:38px; top:-35px; color:rgba(255,255,255,.1); font-size:150px; }.insight-hero .panel-label { color:#abd3c0; }.insight-hero h2 { position:relative; z-index:1; margin:8px 0 24px; font:600 35px Fraunces,serif; }.metric-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; position:relative; z-index:1; }.metric { padding:13px; border-radius:12px; background:rgba(255,255,255,.11); }.metric span { display:block; color:#b9d9cb; font-size:10px; }.metric strong { display:block; margin-top:5px; font:600 22px Fraunces,serif; }.insights-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:17px; margin-top:17px; }.chart-panel,.habit-panel { padding:24px; }.bars { height:190px; margin-top:24px; display:flex; align-items:end; gap:12px; }.bar { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; color:#71867d; font-size:10px; }.bar i { display:block; width:100%; min-height:10px; border-radius:8px 8px 3px 3px; background:linear-gradient(#79bb99,#1c735d); }.habit-list { display:grid; gap:12px; margin-top:17px; }.habit { display:grid; grid-template-columns:34px 1fr auto; align-items:center; gap:10px; }.habit i { width:31px; height:31px; display:grid; place-items:center; background:#e7f1ea; color:#1d735d; border-radius:9px; font-style:normal; }.habit b { font-size:13px; }.habit span { color:#768980; font-size:11px; }.habit strong { font-size:12px; }
 @media(max-width:760px){ .experience-shell{padding-inline:20px}.experience-header{height:70px}.experience-nav{display:none}.page-hero{padding:40px 0 27px;align-items:flex-start;flex-direction:column}.hero-stat{width:100%}.gym-board,.swim-grid,.focus-grid,.insights-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr 1fr}.form-row .action-button{grid-column:1/-1}.day-strip{gap:4px}.day-button{padding:10px 2px}.timer-circle{width:210px;height:210px}.timer-inner{width:184px;height:184px}.explore-grid{grid-template-columns:repeat(2,1fr)} }
+
+/* ============================
+   Dark mode
+   Toggled by adding data-theme="dark" to <html> (see theme-toggle.js)
+   ============================ */
+ 
+body, .next-card, .week-card, .routine-item, .explore-card, .dialog-card,
+.alarm-card, .insight-card, .add-activity, .avatar, .week-day i {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+ 
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #edf3ee;
+  --muted: #93a79d;
+  --line: #2b3a33;
+  --surface: #1c2822;
+  --canvas: #10160f;
+  --sage: #1f342b;
+  --green: #3ecb9f;
+  --green-strong: #1f8a6c;
+  --shadow: 0 16px 38px rgba(0, 0, 0, .45);
+}
+ 
+[data-theme="dark"] .avatar { background: var(--sage); }
+[data-theme="dark"] .next-card { background: var(--sage); }
+[data-theme="dark"] .card-heading { color: var(--muted); }
+[data-theme="dark"] .card-heading strong { color: var(--ink); }
+[data-theme="dark"] .next-card > strong { color: var(--green); }
+[data-theme="dark"] .next-card p, [data-theme="dark"] .week-card p { color: var(--muted); }
+[data-theme="dark"] .week-day { color: var(--muted); }
+[data-theme="dark"] .week-day i { background: var(--line); }
+[data-theme="dark"] .week-day.done i { background: var(--sage); color: var(--green); }
+[data-theme="dark"] .text-button { color: var(--green); }
+[data-theme="dark"] .progress-track { background: var(--line); }
+[data-theme="dark"] .routine-item:hover { border-color: var(--line); }
+[data-theme="dark"] .routine-item.skipped { background: var(--canvas); }
+ 
+[data-theme="dark"] .sun .activity-icon { background: #4a3a12; color: #f2bd57; }
+[data-theme="dark"] .sky .activity-icon { background: #163238; color: #74cee2; }
+[data-theme="dark"] .rose .activity-icon { background: #402024; color: #e6a1a4; }
+[data-theme="dark"] .violet .activity-icon { background: #2c2440; color: #bcaae6; }
+ 
+[data-theme="dark"] .alarm-toggle, [data-theme="dark"] .skip-button { color: var(--muted); }
+[data-theme="dark"] .alarm-toggle.on { color: var(--green); background: var(--sage); }
+[data-theme="dark"] .skip-button.active { color: #e3ac63; background: #3a2c14; }
+[data-theme="dark"] .alarm-toggle:hover, [data-theme="dark"] .skip-button:hover { background: var(--line); color: var(--green); }
+ 
+[data-theme="dark"] .check-button { border-color: var(--line); background: var(--surface); }
+[data-theme="dark"] .complete .check-button { background: var(--green-strong); border-color: var(--green-strong); }
+[data-theme="dark"] .delete-button { color: var(--muted); }
+ 
+[data-theme="dark"] .insight-card { color: var(--muted); }
+[data-theme="dark"] .insight-card strong { color: var(--green); }
+ 
+[data-theme="dark"] dialog::backdrop { background: rgba(0, 0, 0, .6); }
+[data-theme="dark"] .dialog-card, [data-theme="dark"] .alarm-card { background: var(--surface); }
+[data-theme="dark"] .close-button { color: var(--muted); }
+[data-theme="dark"] .dialog-card label:not(.color-label) { color: var(--muted); }
+[data-theme="dark"] .dialog-card input:not([type="radio"]) {
+  background: var(--canvas);
+  border-color: var(--line);
+  color: var(--ink);
+  outline-color: var(--green);
+}
+[data-theme="dark"] .color-label { color: var(--muted); }
+[data-theme="dark"] .color-options input:checked { outline-color: var(--ink); }
+ 
+[data-theme="dark"] .save-button { background: var(--green-strong); }
+[data-theme="dark"] .save-button:hover { background: #176e56; }
+[data-theme="dark"] .snooze-button { border-color: var(--line); background: var(--surface); color: var(--ink); }
+ 
+[data-theme="dark"] .explore-card { color: var(--ink); }
+[data-theme="dark"] .gym-card { background: #1c2f27; }
+[data-theme="dark"] .gym-card::after { background: #3f6b57; }
+[data-theme="dark"] .swim-card { background: #16292c; }
+[data-theme="dark"] .swim-card::after { background: #2f6672; }
+[data-theme="dark"] .focus-card { background: #241f34; }
+[data-theme="dark"] .focus-card::after { background: #5c4f86; }
+[data-theme="dark"] .insight-card-link { background: #3a2f14; }
+[data-theme="dark"] .insight-card-link::after { background: #a67f2e; }
+[data-theme="dark"] .explore-orb { background: rgba(255, 255, 255, .14); }
+[data-theme="dark"] .explore-kicker, [data-theme="dark"] .explore-card em { color: var(--muted); }
+ 
+[data-theme="dark"] .add-activity { border-color: var(--line); color: var(--green); }
+ 
+/* Theme toggle button icon swap */
+#themeToggle { transform: none; }
+#themeToggle::before { content: "\263E"; }
+[data-theme="dark"] #themeToggle::before { content: "\2600"; }
+
+/* Icon button styles (match daily.css) */
+.icon-button, .avatar { border: 0; background: transparent; color: var(--ink); }
+.icon-button { font-size: 25px; transform: rotate(180deg); }
+.icon-button.enabled { color: var(--green); }
+
+
 
