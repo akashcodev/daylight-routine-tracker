@@ -10,8 +10,30 @@
 }
 
 * { box-sizing: border-box; }
+/* Utility class used to temporarily disable transitions/animations during theme switch */
+.no-transitions * { transition: none !important; animation: none !important; }
 body { margin: 0; background: var(--canvas); color: var(--ink); font-family: "DM Sans", sans-serif; }
 button, input { font: inherit; }
+
+/* Glassmorphism tokens and utilities */
+:root {
+  --glass-bg: rgba(255,255,255,0.58);
+  --glass-border: rgba(255,255,255,0.36);
+  --glass-blur: 8px;
+}
+/* Apply subtle glass effect to cards and surfaces */
+.card, .next-card, .week-card, .routine-item, .explore-card, .dialog-card, .alarm-card, .insight-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.66), rgba(255,255,255,0.5));
+  border: 1px solid rgba(255,255,255,0.28);
+  backdrop-filter: blur(var(--glass-blur));
+}
+/* Dark-mode glass adjustments */
+html[data-theme="dark"] .card, html[data-theme="dark"] .next-card, html[data-theme="dark"] .week-card, html[data-theme="dark"] .routine-item {
+  background: linear-gradient(180deg, rgba(20,28,24,0.64), rgba(17,22,18,0.5));
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+
 button { cursor: pointer; }
 .app-shell { max-width: 1080px; margin: 0 auto; padding: 0 42px 72px; }
 .topbar { height: 84px; display: flex; align-items: center; justify-content: space-between; gap: 26px; }

@@ -32,7 +32,34 @@ function bootGym() {
   };
   document.querySelector('#gymDays').addEventListener('click', event => { const button = event.target.closest('[data-day]'); if (button) { selected = Number(button.dataset.day); render(); } });
   document.querySelector('#exerciseList').addEventListener('click', event => { const button = event.target.closest('[data-exercise]'); if (!button) return; const data = read(); const index = Number(button.dataset.exercise); const done = data.gym.completed[selected] || []; data.gym.completed[selected] = done.includes(index) ? done.filter(item => item !== index) : [...done, index]; write(data); render(); toast(done.includes(index) ? 'Exercise returned to your plan.' : 'Nice work — set completed.'); });
-  document.querySelector('#gymLogForm').addEventListener('submit', event => { event.preventDefault(); const data = read(); data.gym.logs.unshift({ exercise: document.querySelector('#gymExercise').value.trim(), load: document.querySelector('#gymLoad').value.trim(), date: todayKey() }); write(data); event.target.reset(); toast('Set added to your training log.'); });
+  const gymForm = document.querySelector('#gymLogForm');
+  function dbg(msg) {
+    try {
+      console.log(msg);
+      var el = document.getElementById('debugLog');
+      if (!el) return;
+      el.style.display = 'block';
+      var p = document.createElement('div'); p.textContent = String(msg); el.appendChild(p);
+      if (el.children.length > 6) el.removeChild(el.children[0]);
+    } catch (e) { console.warn('dbg failed', e); }
+  }
+  if (gymForm) {
+    dbg('[Wellness] gymLogForm found, attaching submit handler');
+    gymForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const exerciseVal = document.querySelector('#gymExercise') ? document.querySelector('#gymExercise').value.trim() : '';
+      const loadVal = document.querySelector('#gymLoad') ? document.querySelector('#gymLoad').value.trim() : '';
+      dbg('[Wellness] gym form submit: ' + exerciseVal + ' | ' + loadVal);
+      const data = read();
+      data.gym.logs.unshift({ exercise: exerciseVal, load: loadVal, date: todayKey() });
+      write(data);
+      event.target.reset();
+      toast('Set added to your training log.');
+    });
+  } else {
+    dbg('[Wellness] gymLogForm NOT found');
+    console.warn('[Wellness] gymLogForm NOT found');
+  }
   render();
 }
 
