@@ -65,7 +65,10 @@ self.addEventListener('fetch', (event) => {
         const copy = networkResponse.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
         return networkResponse;
-      }).catch(() => caches.match('/index.html')).then(response => response || caches.match('/offline.html'))
+      }).catch(() => {
+        // If network fails, try the exact requested page from cache first, then index.html, then offline.html
+        return caches.match(req).then(cachedReq => cachedReq || caches.match('/index.html')).then(response => response || caches.match('/offline.html'));
+      })
     );
     return;
   }
