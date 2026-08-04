@@ -10,6 +10,7 @@ const esc = value => { const el = document.createElement('span'); el.textContent
 const dayName = date => date.toLocaleDateString([], { weekday: 'short' });
 
 function bootGym() {
+  if (window.__daylight_wellness_booted) return; window.__daylight_wellness_booted = true;
   const schedule = [
     { short: 'MON', title: 'Push', subtitle: 'Chest, shoulders & triceps', exercises: [['Bench press', '4 sets · 8 reps'], ['Incline dumbbell press', '3 sets · 10 reps'], ['Cable fly', '3 sets · 12 reps'], ['Tricep pressdown', '3 sets · 12 reps']] },
     { short: 'TUE', title: 'Pull', subtitle: 'Back & biceps', exercises: [['Lat pulldown', '4 sets · 10 reps'], ['Seated cable row', '3 sets · 10 reps'], ['Face pull', '3 sets · 15 reps'], ['Hammer curl', '3 sets · 12 reps']] },
