@@ -22,13 +22,20 @@ function bootGym() {
   let selected = Math.min(new Date().getDay() === 0 ? 6 : new Date().getDay() - 1, 6);
   const render = () => {
     const data = read(); const item = schedule[selected]; const complete = data.gym.completed[selected] || [];
-    document.querySelector('#gymDays').innerHTML = schedule.map((day, index) => `<button class="day-button ${index === selected ? 'active' : ''} ${data.gym.completed[index]?.length === day.exercises.length ? 'done' : ''}" data-day="${index}"><strong>${day.short}</strong><span>${index + 27}</span></button>`).join('');
+    document.querySelector('#gymDays').innerHTML = schedule.map((day, index) => `<button class="day-button ${index === selected ? 'active' : ''} ${(data.gym.completed[index] || []).length === day.exercises.length ? 'done' : ''}" data-day="${index}"><strong>${day.short}</strong><span>${index + 27}</span></button>`).join('');
     document.querySelector('#dayTitle').textContent = `${item.short[0] + item.short.slice(1).toLowerCase()} · ${item.title}`;
     document.querySelector('#daySubtitle').textContent = item.subtitle;
     document.querySelector('#workoutTitle').textContent = `${item.title} day`;
-    document.querySelector('#exerciseList').innerHTML = item.exercises.map((exercise, index) => `<div class="exercise ${complete.includes(index) ? 'complete' : ''}"><i>${index + 1}</i><div><b>${exercise[0]}</b><small>${exercise[1]}</small></div><button data-exercise="${index}">${complete.includes(index) ? 'Done ✓' : 'Mark done'}</button></div>`).join('');
+    document.querySelector('#exerciseList').innerHTML = item.exercises.map((exercise, index) => `<div class="exercise ${complete.includes(index) ? 'complete' : ''}"><i>${index + 1}</i><div><b>${exercise[0]}</b><small>${exercise[1]}</small></div><button type="button" data-exercise="${index}">${complete.includes(index) ? 'Done ✓' : 'Mark done'}</button></div>`).join('');
     const sessions = schedule.filter((day, index) => (data.gym.completed[index] || []).length === day.exercises.length).length;
     document.querySelector('#gymSessions').textContent = `${sessions} / 5`;
+
+    // Render recent logs
+    const logsEl = document.querySelector('#gymLogs');
+    if (logsEl) {
+      const logs = data.gym.logs || [];
+      logsEl.innerHTML = logs.length ? logs.slice(0,6).map(l => `<div class="log-row" style="padding:8px 0;border-top:1px solid rgba(0,0,0,0.05);display:flex;justify-content:space-between;align-items:center"><div><b>${esc(l.exercise)}</b><div class="small-copy" style="opacity:.8">${l.sets} sets · ${l.reps} reps</div></div><small style="opacity:.6">${l.date}</small></div>`).join('') : '<p class="small-copy">No recent logs</p>';
+    }
   };
   document.querySelector('#gymDays').addEventListener('click', event => { const button = event.target.closest('[data-day]'); if (button) { selected = Number(button.dataset.day); render(); } });
   document.querySelector('#exerciseList').addEventListener('click', event => { const button = event.target.closest('[data-exercise]'); if (!button) return; const data = read(); const index = Number(button.dataset.exercise); const done = data.gym.completed[selected] || []; data.gym.completed[selected] = done.includes(index) ? done.filter(item => item !== index) : [...done, index]; write(data); render(); toast(done.includes(index) ? 'Exercise returned to your plan.' : 'Nice work — set completed.'); });
@@ -47,13 +54,18 @@ function bootGym() {
     dbg('[Wellness] gymLogForm found, attaching submit handler');
     gymForm.addEventListener('submit', event => {
       event.preventDefault();
-      const exerciseVal = document.querySelector('#gymExercise') ? document.querySelector('#gymExercise').value.trim() : '';
-      const loadVal = document.querySelector('#gymLoad') ? document.querySelector('#gymLoad').value.trim() : '';
-      dbg('[Wellness] gym form submit: ' + exerciseVal + ' | ' + loadVal);
+      const name = document.querySelector('#gymExerciseName') ? document.querySelector('#gymExerciseName').value.trim() : '';
+      const sets = document.querySelector('#gymSets') ? Number(document.querySelector('#gymSets').value) : 0;
+      const reps = document.querySelector('#gymReps') ? Number(document.querySelector('#gymReps').value) : 0;
+      dbg('[Wellness] gym form submit: ' + name + ' | ' + sets + ' x ' + reps);
+      if (!name) { toast('Please enter an exercise name.'); return; }
       const data = read();
-      data.gym.logs.unshift({ exercise: exerciseVal, load: loadVal, date: todayKey() });
+      data.gym.logs = data.gym.logs || [];
+      data.gym.logs.unshift({ exercise: name, sets: sets, reps: reps, date: todayKey() });
+      if (data.gym.logs.length > 100) data.gym.logs.length = 100;
       write(data);
       event.target.reset();
+      render();
       toast('Set added to your training log.');
     });
   } else {
