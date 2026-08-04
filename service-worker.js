@@ -12,14 +12,15 @@ const ASSETS_TO_CACHE = [
   '/swimming.html',
   '/focus.html',
   '/insights.html',
-  '/daily.css',
-  '/experience.css',
+  '/styles.css',
   '/daily.js',
   '/wellness.js',
   '/theme-toggle.js',
   '/alarm-sound.js',
   '/pwa-register.js',
   '/manifest.json',
+  '/offline.html',
+  '/sounds/Wakeup.mp3',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];
@@ -64,7 +65,7 @@ self.addEventListener('fetch', (event) => {
         const copy = networkResponse.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
         return networkResponse;
-      }).catch(() => caches.match('/index.html'))
+      }).catch(() => caches.match('/index.html')).then(response => response || caches.match('/offline.html'))
     );
     return;
   }
