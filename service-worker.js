@@ -22,7 +22,8 @@ const ASSETS_TO_CACHE = [
   '/offline.html',
   '/sounds/Wakeup.mp3',
   '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/icon-512.png',
+  'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap'
 ];
 
 self.addEventListener('install', (event) => {
@@ -53,6 +54,22 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
+  // Special handling for Google Fonts so pages look correct offline
+  const isGoogleFontsCSS = url.hostname === 'fonts.googleapis.com';
+  const isGoogleFonts = url.hostname === 'fonts.gstatic.com';
+  if (isGoogleFontsCSS || isGoogleFonts) {
+    event.respondWith(
+      caches.match(req).then(cached => {
+        if (cached) return cached;
+        return fetch(req).then(networkResponse => {
+          caches.open(CACHE_NAME).then(cache => cache.put(req, networkResponse.clone()));
+          return networkResponse;
+        }).catch(() => cached || null);
+      })
+    );
+    return;
+  }
+
   // Always allow cross-origin requests to pass through (assets from CDNs, fonts)
   const isSameOrigin = url.origin === self.location.origin;
   const isNavigation = req.mode === 'navigate';
@@ -65,7 +82,10 @@ self.addEventListener('fetch', (event) => {
         const copy = networkResponse.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
         return networkResponse;
-      }).catch(() => caches.match('/index.html')).then(response => response || caches.match('/offline.html'))
+      }).catch(() => {
+        // If network fails, try the exact requested page from cache first, then index.html, then offline.html
+        return caches.match(req).then(cachedReq => cachedReq || caches.match('/index.html')).then(response => response || caches.match('/offline.html'));
+      })
     );
     return;
   }
