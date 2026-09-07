@@ -232,4 +232,72 @@ html[data-theme="dark"] .icon-button.enabled { color: var(--green); }
 #themeToggle::before { content: "\263E"; }
 html[data-theme="dark"] #themeToggle::before { content: "\2600"; }
 
+/* Calories Tracker */
+.calories-board { display:grid; grid-template-columns:1fr; gap:17px; }.nutrition-panel { padding:24px; background:linear-gradient(140deg,#fff5e6,#fffbf0); }.nutrition-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:18px; }.stat-item { text-align:center; padding:16px; background:#fff; border-radius:13px; border:1px solid #ffe5c5; }.stat-item span { display:block; color:#a0826b; font-size:10px; font-weight:700; letter-spacing:1px; margin-bottom:8px; }.stat-item strong { display:block; color:#d97706; font:600 28px Fraunces,serif; }.stat-item small { display:block; margin-top:4px; color:#b89968; font-size:11px; }
+.food-log { margin-top:17px; padding:23px; background:#fef9f3; }.food-log .panel-label { color:#a08070; }.food-log h2 { margin:8px 0 18px; font:600 28px Fraunces,serif; }
+.food-form { display:grid; gap:14px; }
+.form-group { display:grid; gap:6px; }
+.form-group label { color:#5d4f47; font-size:12px; font-weight:700; }
+.form-group input { border:1px solid #dbb889; background:#fff; border-radius:9px; padding:10px 12px; color:#2d2416; font-size:12px; }
+.form-group input::placeholder { color:#a89980; }
+.form-row-2 { display:grid; grid-template-columns:1.2fr 1fr; gap:12px; }
+.form-row-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+.food-form .action-button { padding:13px 18px; margin-top:8px; }
+.food-entries { display:grid; gap:12px; }
+.food-entry-row { display:grid; grid-template-columns:1fr auto 36px; align-items:center; gap:12px; padding:14px; border-radius:12px; background:#fff; border:1px solid #e8d4b8; transition:.2s; }
+.food-entry-row:hover { border-color:#d4b896; transform:translateY(-1px); }
+.entry-info b { display:block; color:#2d2416; font-size:13px; margin-bottom:4px; }
+.entry-macros { display:flex; flex-wrap:wrap; gap:8px; }
+.entry-macros span { background:#fff8f1; color:#8b7355; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:600; }
+.macro-label { font-weight:700; }
+.delete-entry-btn { border:0; background:none; color:#b89968; font-size:24px; line-height:1; padding:0; width:36px; height:36px; display:grid; place-items:center; cursor:pointer; }
+.delete-entry-btn:hover { color:#d97706; }
+
+/* Action buttons */
+.action-button { border:0; background:#d97706; color:#fff; border-radius:9px; padding:11px 16px; font-weight:700; font-size:12px; transition:.2s; }
+.action-button:hover { background:#b85a06; }
+
+/* Toast notification */
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.87); color:#fff; padding:12px 16px; border-radius:8px; font-size:13px; font-weight:600; opacity:0; transition:opacity .3s; pointer-events:none; max-width:90%; z-index:10000; }
+.toast.show { opacity:1; pointer-events:auto; }
+
+/* Hero stat card */
+.hero-stat { padding:20px; text-align:center; background:linear-gradient(145deg,#fff8f1,#fffbf5); }
+.hero-stat span { display:block; color:#a0826b; font-size:10px; font-weight:700; letter-spacing:1.2px; margin-bottom:8px; }
+.hero-stat strong { display:block; color:#d97706; font:600 32px Fraunces,serif; margin-bottom:4px; }
+.hero-stat em { display:block; color:#b89968; font-size:11px; font-style:normal; }
+
+@media(max-width:760px){
+  .nutrition-stats { grid-template-columns:repeat(2,1fr); gap:10px; }
+  .form-row-2 { grid-template-columns:1fr; }
+  .form-row-3 { grid-template-columns:1fr; }
+  .food-entry-row { grid-template-columns:1fr auto; }
+  .entry-macros { gap:6px; }
+  .entry-macros span { font-size:10px; }
+}
+
+/* Dark mode overrides for calories */
+html[data-theme="dark"] .nutrition-panel { background:linear-gradient(140deg,#2d1f0d,#3d2410); }
+html[data-theme="dark"] .stat-item { background:#1a130a; border-color:#4d3220; }
+html[data-theme="dark"] .stat-item span { color:#b8956a; }
+html[data-theme="dark"] .stat-item strong { color:#ff9800; }
+html[data-theme="dark"] .stat-item small { color:#a69070; }
+html[data-theme="dark"] .food-log { background:#1f1410; }
+html[data-theme="dark"] .food-log .panel-label { color:#9d7d5f; }
+html[data-theme="dark"] .form-group label { color:#d4a574; }
+html[data-theme="dark"] .form-group input { border-color:#5d4530; background:#0f0b08; color:#e0cbb8; }
+html[data-theme="dark"] .form-group input::placeholder { color:#6d5a47; }
+html[data-theme="dark"] .food-entry-row { background:#1a140e; border-color:#3d2817; }
+html[data-theme="dark"] .food-entry-row:hover { border-color:#6d5540; }
+html[data-theme="dark"] .entry-info b { color:#f0d9c6; }
+html[data-theme="dark"] .entry-macros span { background:#2d1f0d; color:#d4a574; }
+html[data-theme="dark"] .delete-entry-btn { color:#b8956a; }
+html[data-theme="dark"] .delete-entry-btn:hover { color:#ff9800; }
+html[data-theme="dark"] .action-button { background:#ff9800; }
+html[data-theme="dark"] .action-button:hover { background:#e68a00; }
+html[data-theme="dark"] .hero-stat { background:linear-gradient(145deg,#2d1f0d,#3d2410); color:#f0d9c6; }
+html[data-theme="dark"] .hero-stat span { color:#b8956a; }
+html[data-theme="dark"] .hero-stat strong { color:#ff9800; }
+html[data-theme="dark"] .hero-stat em { color:#a69070; }
+
 /* End combined stylesheet */

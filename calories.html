@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#1c6f5b" />
+  <script>
+    (function() {
+      try {
+        var k = 'dl-theme-v2';
+        var s = localStorage.getItem(k);
+        var p = window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches;
+        var t = s || (p ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Daylight" />
+  <title>Daylight · Calories tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="calories">
+  <main class="experience-shell">
+    <header class="experience-header">
+      <a class="experience-brand" href="index.html"><span>☼</span>daylight</a>
+      <nav class="experience-nav">
+        <a href="index.html">Today</a>
+        <a href="gym.html">Gym</a>
+        <a href="swimming.html">Swim</a>
+        <a href="focus.html">Focus</a>
+        <a class="active" href="calories.html">Calories</a>
+        <a href="insights.html">Insights</a>
+      </nav>
+      <button class="live-pill" type="button">NUTRITION TRACKER</button>
+      <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme" title="Toggle theme"></button>
+    </header>
+
+    <section class="page-hero">
+      <div>
+        <p class="eyebrow">FUEL YOUR BODY</p>
+        <h1>Your <em>nutrition</em><br>journey starts here.</h1>
+      </div>
+      <article class="card hero-stat">
+        <span>TODAY</span>
+        <strong id="totalCalories">0 cal</strong>
+        <em>total consumed</em>
+      </article>
+    </section>
+
+    <section class="calories-board">
+      <article class="card nutrition-panel">
+        <p class="panel-label">NUTRITION OVERVIEW</p>
+        <div class="nutrition-stats" id="nutritionStats">
+          <div class="stat-item">
+            <span class="stat-label">Calories</span>
+            <strong id="statCalories">0</strong>
+            <small>kcal</small>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Protein</span>
+            <strong id="statProtein">0</strong>
+            <small>g</small>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Carbs</span>
+            <strong id="statCarbs">0</strong>
+            <small>g</small>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Fats</span>
+            <strong id="statFats">0</strong>
+            <small>g</small>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="food-log card">
+      <p class="panel-label">ADD FOOD</p>
+      <h2>Log your meals</h2>
+      <form class="food-form" id="foodForm">
+        <div class="form-group">
+          <label for="foodDate">Date</label>
+          <input id="foodDate" type="date" required />
+        </div>
+        <div class="form-group">
+          <label for="foodName">Food name *</label>
+          <input id="foodName" type="text" maxlength="64" placeholder="e.g. Apple, Chicken breast" />
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="foodQuantity">Quantity</label>
+            <input id="foodQuantity" type="text" maxlength="32" placeholder="e.g. 1 piece or 150g" />
+          </div>
+          <div class="form-group">
+            <label for="foodCalories">Calories</label>
+            <input id="foodCalories" type="number" min="0" placeholder="kcal" />
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label for="foodProtein">Protein</label>
+            <input id="foodProtein" type="number" min="0" step="0.1" placeholder="g" />
+          </div>
+          <div class="form-group">
+            <label for="foodCarbs">Carbs</label>
+            <input id="foodCarbs" type="number" min="0" step="0.1" placeholder="g" />
+          </div>
+          <div class="form-group">
+            <label for="foodFats">Fats</label>
+            <input id="foodFats" type="number" min="0" step="0.1" placeholder="g" />
+          </div>
+        </div>
+        <button type="submit" class="action-button">Add food</button>
+      </form>
+      <div id="foodLogs" class="food-entries" style="margin-top:24px"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <div id="debugLog" style="position:fixed;right:12px;bottom:12px;background:rgba(0,0,0,0.8);color:#fff;padding:8px;border-radius:8px;z-index:9999;max-width:260px;font-size:12px;display:none"></div>
+
+  <script src="wellness.js"></script>
+  <script>
+    function bootCalories() {
+      if (window.__daylight_wellness_booted_calories) return;
+      window.__daylight_wellness_booted_calories = true;
+
+      const CALORIES_KEY = 'daylight-calories-v1';
+      const todayKey = () => new Date().toLocaleDateString('en-CA');
+      
+      const readCalories = () => {
+        try {
+          return JSON.parse(localStorage.getItem(CALORIES_KEY)) || { entries: [] };
+        } catch (_) {
+          return { entries: [] };
+        }
+      };
+      
+      const writeCalories = data => localStorage.setItem(CALORIES_KEY, JSON.stringify(data));
+      
+      const toast = message => {
+        const el = document.querySelector('#toast');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 2600);
+      };
+      
+      const esc = value => {
+        const el = document.createElement('span');
+        el.textContent = value;
+        return el.innerHTML;
+      };
+
+      const formatDate = dateStr => {
+        const date = new Date(dateStr + 'T00:00:00');
+        return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+      };
+
+      const calculateTotals = (entries) => {
+        return entries.reduce((acc, entry) => {
+          return {
+            calories: acc.calories + (Number(entry.calories) || 0),
+            protein: acc.protein + (Number(entry.protein) || 0),
+            carbs: acc.carbs + (Number(entry.carbs) || 0),
+            fats: acc.fats + (Number(entry.fats) || 0)
+          };
+        }, { calories: 0, protein: 0, carbs: 0, fats: 0 });
+      };
+
+      const render = () => {
+        const data = readCalories();
+        const today = todayKey();
+        const todayEntries = data.entries.filter(entry => entry.date === today);
+        
+        const totals = calculateTotals(todayEntries);
+        
+        document.querySelector('#totalCalories').textContent = `${Math.round(totals.calories)} cal`;
+        document.querySelector('#statCalories').textContent = Math.round(totals.calories);
+        document.querySelector('#statProtein').textContent = Math.round(totals.protein * 10) / 10;
+        document.querySelector('#statCarbs').textContent = Math.round(totals.carbs * 10) / 10;
+        document.querySelector('#statFats').textContent = Math.round(totals.fats * 10) / 10;
+
+        const logsEl = document.querySelector('#foodLogs');
+        if (todayEntries.length === 0) {
+          logsEl.innerHTML = '<p class="small-copy">No food entries for today yet. Add one to get started!</p>';
+        } else {
+          logsEl.innerHTML = todayEntries.map((entry, index) => `
+            <div class="food-entry-row">
+              <div class="entry-info">
+                <b>${esc(entry.name)}</b>
+                ${entry.quantity ? `<div class="small-copy" style="opacity:.8">${esc(entry.quantity)}</div>` : ''}
+                <div class="small-copy" style="opacity:.6">${formatDate(entry.date)}</div>
+              </div>
+              <div class="entry-macros">
+                ${entry.calories ? `<span>${entry.calories} kcal</span>` : ''}
+                ${entry.protein ? `<span class="macro-label">P: ${entry.protein}g</span>` : ''}
+                ${entry.carbs ? `<span class="macro-label">C: ${entry.carbs}g</span>` : ''}
+                ${entry.fats ? `<span class="macro-label">F: ${entry.fats}g</span>` : ''}
+              </div>
+              <button class="delete-entry-btn" data-index="${index}" type="button" aria-label="Delete entry">×</button>
+            </div>
+          `).join('');
+          
+          document.querySelectorAll('.delete-entry-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const index = Number(btn.dataset.index);
+              const todayEntries = data.entries.filter(entry => entry.date === today);
+              const entryToDelete = todayEntries[index];
+              data.entries = data.entries.filter(entry => !(entry.date === entryToDelete.date && entry.name === entryToDelete.name && entry.timestamp === entryToDelete.timestamp));
+              writeCalories(data);
+              render();
+              toast('Entry removed from your food log.');
+            });
+          });
+        }
+      };
+
+      const foodForm = document.querySelector('#foodForm');
+      if (foodForm) {
+        const dateInput = document.querySelector('#foodDate');
+        dateInput.valueAsDate = new Date();
+        
+        foodForm.addEventListener('submit', event => {
+          event.preventDefault();
+          
+          const name = document.querySelector('#foodName').value.trim();
+          const quantity = document.querySelector('#foodQuantity').value.trim();
+          const calories = document.querySelector('#foodCalories').value.trim();
+          const protein = document.querySelector('#foodProtein').value.trim();
+          const carbs = document.querySelector('#foodCarbs').value.trim();
+          const fats = document.querySelector('#foodFats').value.trim();
+          const date = document.querySelector('#foodDate').value;
+          
+          if (!name) {
+            toast('Please enter a food name.');
+            return;
+          }
+
+          const data = readCalories();
+          const entry = {
+            name: name,
+            quantity: quantity,
+            calories: calories ? Number(calories) : null,
+            protein: protein ? Number(protein) : null,
+            carbs: carbs ? Number(carbs) : null,
+            fats: fats ? Number(fats) : null,
+            date: date,
+            timestamp: Date.now()
+          };
+          
+          data.entries.unshift(entry);
+          if (data.entries.length > 500) data.entries.length = 500;
+          
+          writeCalories(data);
+          event.target.reset();
+          document.querySelector('#foodDate').valueAsDate = new Date();
+          render();
+          toast('Food entry added to your nutrition log.');
+        });
+      }
+      
+      render();
+    }
+
+    // Boot on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootCalories);
+    } else {
+      bootCalories();
+    }
+  </script>
+  <script src="./pwa-register.js"></script>
+  <script src="theme-toggle.js"></script>
+</body>
+</html>
